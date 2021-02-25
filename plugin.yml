@@ -12,6 +12,10 @@ configuration:
           type: string
         to:
           type: string
+        compress:
+          type: boolean
+        extract:
+          type: boolean
       required:
         - from
         - to

@@ -42,9 +42,12 @@ trap popd EXIT
 
 if [[ "${SINGULAR_UPLOAD_OBJECT}" == "true" ]]; then
   if [[ "${RELOCATION}" == "true" ]]; then
-    if [[ -e "${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_FROM:-}" ]]; then
+    if [[ -e "${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_FROM:-}" && !"${BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_COMPRESS:-false}" =~ ^(true|on|1)$ ]]; then
       echo "~~~ Moving [${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_FROM}] to [${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_TO}]..."
       mv "${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_FROM}" "${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_TO}"
+    else
+      echo "~~~ Compressing [${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_FROM}] to [${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_TO}]..."
+      tar -czvf ${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_TO} ${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_FROM}
     fi
     path="${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_TO}"
   else
@@ -69,9 +72,12 @@ elif [[ "${MULTIPLE_UPLOADS}" == "true" ]]; then
         source_env_var="BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_${index}_FROM"
         dest_env_var="BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_${index}_TO"
         if [[ -n "${!source_env_var:-}" ]] && [[ -n "${!dest_env_var:-}" ]]; then
-          if [[ -e ${!source_env_var} ]]; then
+          if [[ -e ${!source_env_var} && !"${BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_COMPRESS:-false}" =~ ^(true|on|1)$ ]]; then
             echo "~~~ Moving [${!source_env_var}] to [${!dest_env_var}]..."
             mv ${!source_env_var} ${!dest_env_var}
+          else
+            echo "~~~ Compressing [${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_FROM}] to [${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_TO}]..."
+            tar -czvf ${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_TO} ${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_FROM}
           fi
           path="${!dest_env_var}"
         fi
@@ -86,9 +92,12 @@ elif [[ "${MULTIPLE_UPLOADS}" == "true" ]]; then
         source_env_var="BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_${index}_FROM"
         dest_env_var="BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_${index}_TO"
         if [[ -n "${!source_env_var:-}" ]] && [[ -n "${!dest_env_var:-}" ]]; then
-          if [[ -e ${!source_env_var} ]]; then
+          if [[ -e ${!source_env_var} && !"${BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_COMPRESS:-false}" =~ ^(true|on|1)$]]; then
             echo "~~~ Moving [${!source_env_var}] to [${!dest_env_var}]..."
             mv ${!source_env_var} ${!dest_env_var}
+          else
+            echo "~~~ Compressing [${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_FROM}] to [${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_TO}]..."
+            tar -czvf ${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_TO} ${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_FROM}       
           fi
           path="${!dest_env_var}"
         fi

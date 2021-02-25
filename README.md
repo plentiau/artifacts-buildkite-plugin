@@ -48,6 +48,19 @@ steps:
           to: log2.log
 ```
 
+or
+
+```
+steps:
+  - command: ...
+    plugins:
+    - artifacts#v1.3.0:
+        upload: 
+          from: /output/**
+          to: output.gz
+          compress: true
+```
+
 ## Downloading artifacts
 
 This downloads artifacts matching globs to the local filesystem. See [downloading artifacts](https://buildkite.com/docs/agent/cli-artifact#downloading-artifacts) for more details.
@@ -92,6 +105,19 @@ steps:
           download: 
           - from: log1.log
             to: log2.log
+```
+
+or
+
+```yml
+steps:
+  - command: ...
+    plugins:
+    - artifacts#v1.3.0:
+        download: 
+          from: output.gz
+          to: /workdir/output
+          extract: true
 ```
 
 ## Configuration
