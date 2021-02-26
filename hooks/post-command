@@ -36,6 +36,7 @@ while IFS='=' read -r path _ ; do
 done < <(env | sort)
 
 workdir=${BUILDKITE_PLUGIN_ARTIFACTS_WORKDIR:-.}
+WORK_PATH=${PWD}
 
 pushd "${workdir}"
 trap popd EXIT
@@ -47,13 +48,15 @@ if [[ "${SINGULAR_UPLOAD_OBJECT}" == "true" ]]; then
       mv "${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_FROM}" "${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_TO}"
     else
       echo "~~~ Compressing [${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_FROM}] to [${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_TO}]..."
-      tar -czvf ${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_TO} ${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_FROM}
+      cd ${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_FROM}
+      tar -czf ${WORK_PATH}/${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_TO} .
+      cd ${WORK_PATH}
     fi
     path="${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_TO}"
   else
     path="${paths[0]}"
   fi
-
+  
   if [ "${#args[@]}" -gt 0 ]; then
     echo "~~~ Uploading artifacts with args: ${args[*]}"
     buildkite-agent artifact upload "${args[@]}" "${path}"
@@ -78,7 +81,9 @@ elif [[ "${MULTIPLE_UPLOADS}" == "true" ]]; then
             mv ${!source_env_var} ${!dest_env_var}
           else
             echo "~~~ Compressing [${!source_env_var}] to [${!dest_env_var}]..."
-            tar -czvf ${!dest_env_var} ${!source_env_var}      
+            cd ${!source_env_var}
+            tar -czf ${WORK_PATH}/${!dest_env_var} .
+            cd ${WORK_PATH}
           fi
           path="${!dest_env_var}"
         fi
@@ -99,7 +104,9 @@ elif [[ "${MULTIPLE_UPLOADS}" == "true" ]]; then
             mv ${!source_env_var} ${!dest_env_var}
           else
             echo "~~~ Compressing [${!source_env_var}] to [${!dest_env_var}]..."
-            tar -czvf ${!dest_env_var} ${!source_env_var}      
+            cd ${!source_env_var}
+            tar -czf ${WORK_PATH}/${!dest_env_var} .
+            cd ${WORK_PATH}    
           fi
           path="${!dest_env_var}"
         fi
