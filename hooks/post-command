@@ -71,8 +71,9 @@ elif [[ "${MULTIPLE_UPLOADS}" == "true" ]]; then
       do
         source_env_var="BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_${index}_FROM"
         dest_env_var="BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_${index}_TO"
+        compress_env_var="BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_${index}_COMPRESS"
         if [[ -n "${!source_env_var:-}" ]] && [[ -n "${!dest_env_var:-}" ]]; then
-          if [[ -e ${!source_env_var} && !"${BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_COMPRESS:-false}" =~ ^(true|on|1)$ ]]; then
+          if [[ -e ${!source_env_var} && !${compress_env_var:-false} =~ ^(true|on|1)$ ]]; then
             echo "~~~ Moving [${!source_env_var}] to [${!dest_env_var}]..."
             mv ${!source_env_var} ${!dest_env_var}
           else
@@ -91,8 +92,9 @@ elif [[ "${MULTIPLE_UPLOADS}" == "true" ]]; then
       do
         source_env_var="BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_${index}_FROM"
         dest_env_var="BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_${index}_TO"
+        compress_env_var="BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_${index}_COMPRESS"
         if [[ -n "${!source_env_var:-}" ]] && [[ -n "${!dest_env_var:-}" ]]; then
-          if [[ -e ${!source_env_var} && !"${BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_COMPRESS:-false}" =~ ^(true|on|1)$]]; then
+          if [[ -e ${!source_env_var} && !${compress_env_var:-false} =~ ^(true|on|1)$ ]]; then
             echo "~~~ Moving [${!source_env_var}] to [${!dest_env_var}]..."
             mv ${!source_env_var} ${!dest_env_var}
           else
