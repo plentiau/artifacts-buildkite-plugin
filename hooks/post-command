@@ -77,8 +77,8 @@ elif [[ "${MULTIPLE_UPLOADS}" == "true" ]]; then
             echo "~~~ Moving [${!source_env_var}] to [${!dest_env_var}]..."
             mv ${!source_env_var} ${!dest_env_var}
           else
-            echo "~~~ Compressing [${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_FROM}] to [${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_TO}]..."
-            tar -czvf ${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_TO} ${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_FROM}
+            echo "~~~ Compressing [${!source_env_var}] to [${!dest_env_var}]..."
+            tar -czvf ${!dest_env_var} ${!source_env_var}      
           fi
           path="${!dest_env_var}"
         fi
@@ -98,8 +98,8 @@ elif [[ "${MULTIPLE_UPLOADS}" == "true" ]]; then
             echo "~~~ Moving [${!source_env_var}] to [${!dest_env_var}]..."
             mv ${!source_env_var} ${!dest_env_var}
           else
-            echo "~~~ Compressing [${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_FROM}] to [${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_TO}]..."
-            tar -czvf ${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_TO} ${BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_FROM}       
+            echo "~~~ Compressing [${!source_env_var}] to [${!dest_env_var}]..."
+            tar -czvf ${!dest_env_var} ${!source_env_var}      
           fi
           path="${!dest_env_var}"
         fi
