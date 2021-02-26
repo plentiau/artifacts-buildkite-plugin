@@ -50,7 +50,7 @@ steps:
 
 or
 
-```
+```yml
 steps:
   - command: ...
     plugins:
