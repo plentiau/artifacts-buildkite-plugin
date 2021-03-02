@@ -39,7 +39,7 @@ load '/usr/local/lib/bats/load.bash'
 }
 
 @test "Pre-command downloads compressing artifacts" {
-  mkdir /tmp/data && touch /tmp/data/foo.log
+  mkdir -p /tmp/data && touch /tmp/data/foo.log
   tar -C /tmp -czf /tmp/data.tar.gz data
   stub buildkite-agent \
     "artifact download /tmp/data.tar : echo Downloading compressing artifacts"
@@ -158,7 +158,7 @@ load '/usr/local/lib/bats/load.bash'
 }
 
 @test "Pre-command downloads multiple compressing artifact" {
-  mkdir /tmp/data-{1,2} && touch /tmp/data-{1,2}/foo-{1,2}.log
+  mkdir -p /tmp/data-{1,2} && touch /tmp/data-{1,2}/foo-{1,2}.log
   tar -C /tmp/data-1 -czf /tmp/data-1.tar.gz .
   tar -C /tmp/data-2 -czf /tmp/data-2.tar.gz .
   stub buildkite-agent \
@@ -207,6 +207,9 @@ load '/usr/local/lib/bats/load.bash'
 }
 
 @test "Pre-command downloads multiple compressing artifacts with build" {
+  mkdir -p /tmp/data-{1,2} && touch /tmp/data-{1,2}/foo-{1,2}.log
+  tar -C /tmp/data-1 -czf /tmp/data-1.tar.gz .
+  tar -C /tmp/data-2 -czf /tmp/data-2.tar.gz .
   stub buildkite-agent \
     "artifact download --build 12345 /tmp/data-1.tar.gz . : echo Downloading compressing artifacts with args: --build 12345" \
     "artifact download --build 12345 /tmp/data-2.tar.gz . : echo Downloading compressing artifacts with args: --build 12345"
@@ -293,7 +296,7 @@ load '/usr/local/lib/bats/load.bash'
 }
 
 @test "Post-command uploads artifacts with a compressing option" {
-  mkdir /tmp/data && touch /tmp/data/foo.log
+  mkdir -p /tmp/data && touch /tmp/data/foo.log
   stub buildkite-agent \
     "artifact upload /tmp/data/ : echo Uploading compressing artifacts"
   touch /tmp/foo.log
@@ -393,7 +396,7 @@ load '/usr/local/lib/bats/load.bash'
 }
 
 @test "Post-command uploads multiple compressing artifacts" {
-  mkdir /tmp/data-{1,2} && touch /tmp/data-{1,2}/foo-{1,2}.log
+  mkdir -p /tmp/data-{1,2} && touch /tmp/data-{1,2}/foo-{1,2}.log
   stub buildkite-agent \
     "artifact upload /tmp/data-1/ : echo Uploading compressing artifacts" \
     "artifact upload /tmp/data-2/ : echo Uploading compressing artifacts"
