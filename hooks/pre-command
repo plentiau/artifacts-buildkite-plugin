@@ -59,8 +59,15 @@ if [[ "${SINGULAR_DOWNLOAD_OBJECT}" == "true" ]]; then
     if ! [[ -d $(dirname "${BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_TO}") ]]; then
         mkdir -p "$(dirname "${BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_TO}")"
     fi
-    echo "~~~ Moving [${BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_FROM}] to [${BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_TO}]..."
-    mv "${BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_FROM}" "${BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_TO}"
+    # Handler for extract artifacts
+    if [[ "${BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_EXTRACT:-false}" =~ ^(true|on|1)$ ]] ; then
+      echo "~~~ Extracting [${BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_FROM}] to [${BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_TO}]..."
+      mkdir -p ${BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_TO}
+      tar -xzf ${source} -C ${BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_TO}
+    else
+      echo "~~~ Moving [${BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_FROM}] to [${BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_TO}]..."
+      mv "${BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_FROM}" "${BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_TO}"
+    fi
   fi
 elif [[ "${MULTIPLE_DOWNLOADS}" == "true" ]]; then
   index=0
@@ -70,6 +77,7 @@ elif [[ "${MULTIPLE_DOWNLOADS}" == "true" ]]; then
       do
         source_env_var="BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_${index}_FROM"
         dest_env_var="BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_${index}_TO"
+        extract_env_var="BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_${index}_EXTRACT"
         if [[ -n "${!source_env_var:-}" ]] && [[ -n "${!dest_env_var:-}" ]]; then
           source="${!source_env_var}"
         else
@@ -80,8 +88,15 @@ elif [[ "${MULTIPLE_DOWNLOADS}" == "true" ]]; then
           if ! [[ -d $(dirname "${!dest_env_var}") ]]; then
             mkdir -p "$(dirname "${!dest_env_var}")"
           fi
-          echo "~~~ Moving [${source}] to [${!dest_env_var}]..."
-          mv "${source}" "${!dest_env_var}"
+          # Handler for extract artifacts
+          if [[ ${!extract_env_var:-false} =~ ^(true|on|1)$ ]] ; then
+            echo "~~~ Extracting [${source}] to [${!dest_env_var}]..."
+            mkdir -p ${!dest_env_var}
+            tar -xzf ${source} -C ${!dest_env_var}
+          else
+            echo "~~~ Moving [${source}] to [${!dest_env_var}]..."
+            mv "${source}" "${!dest_env_var}"
+          fi
         fi
         ((index+=1))
       done
@@ -92,6 +107,7 @@ elif [[ "${MULTIPLE_DOWNLOADS}" == "true" ]]; then
       do
         source_env_var="BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_${index}_FROM"
         dest_env_var="BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_${index}_TO"
+        extract_env_var="BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_${index}_EXTRACT"
         if [[ -n "${!source_env_var:-}" ]] && [[ -n "${!dest_env_var:-}" ]]; then
           source="${!source_env_var}"
         else
@@ -102,8 +118,15 @@ elif [[ "${MULTIPLE_DOWNLOADS}" == "true" ]]; then
           if ! [[ -d $(dirname "${!dest_env_var}") ]]; then
             mkdir -p "$(dirname "${!dest_env_var}")"
           fi
-          echo "~~~ Moving [${source}] to [${!dest_env_var}]..."
-          mv "${source}" "${!dest_env_var}"
+          # Handler for extract artifacts
+          if [[ ${!extract_env_var:-false} =~ ^(true|on|1)$ ]] ; then
+            echo "~~~ Extracting [${source}] to [${!dest_env_var}]..."
+            mkdir -p ${!dest_env_var}
+            tar -xzf ${source} -C ${!dest_env_var}
+          else
+            echo "~~~ Moving [${source}] to [${!dest_env_var}]..."
+            mv "${source}" "${!dest_env_var}"
+          fi
         fi
         ((index+=1))
       done
