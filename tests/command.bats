@@ -57,6 +57,8 @@ load '/usr/local/lib/bats/load.bash'
   unset BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_FROM
   unset BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_TO
   unset BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_EXTRACT
+  rm -rf /tmp/data
+  rm -f /tmp/data.tar.gz
 }
 
 @test "Pre-command downloads artifacts with step" {
@@ -185,6 +187,8 @@ load '/usr/local/lib/bats/load.bash'
   unset BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_1_FROM
   unset BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_1_TO
   unset BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_1_EXTRACT
+  rm -rf /tmp/data-{1,2}
+  rm -f /tmp/data-{1,2}.tar.gz
 }
 
 @test "Pre-command downloads multiple artifacts with build" {
@@ -237,6 +241,9 @@ load '/usr/local/lib/bats/load.bash'
   unset BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_1_FROM
   unset BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_1_TO
   unset BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_1_EXTRACT
+  rm -rf ./data
+  rm -rf /tmp/data-{1,2}
+  rm -f /tmp/data-{1,2}.tar.gz
 }
 
 @test "Pre-command downloads multiple artifacts with build and relocation" {
@@ -314,6 +321,8 @@ load '/usr/local/lib/bats/load.bash'
   unset BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_FROM
   unset BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_TO
   unset BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_COMPRESS
+  rm -rf /tmp/data
+  rm -f /tmp/data.tar.gz
 }
 
 @test "Post-command uploads artifacts with a single value for upload and a job" {
@@ -333,6 +342,8 @@ load '/usr/local/lib/bats/load.bash'
 }
 
 @test "Post-command uploads artifacts with compressing option and a job" {
+  mkdir -p /tmp/data && touch /tmp/data/foo.log
+  tar -C /tmp -czf /tmp/data.tar.gz data
   stub buildkite-agent \
     "artifact upload --job 12345 /tmp/data/ : echo Uploading compressing artifacts with args: --job 12345"
 
@@ -351,6 +362,8 @@ load '/usr/local/lib/bats/load.bash'
   unset BUILDKITE_PLUGIN_ARTIFACTS_DOWNLOAD_TO
   unset BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_COMPRESS
   unset BUILDKITE_PLUGIN_ARTIFACTS_JOB
+  rm -rf /tmp/data
+  rm -f /tmp/data.tar.gz
 }
 
 @test "Post-command uploads artifacts with a single value for upload and a job and relocation" {
@@ -421,6 +434,8 @@ load '/usr/local/lib/bats/load.bash'
   unset BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_1_FROM
   unset BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_1_TO
   unset BUILDKITE_PLUGIN_ARTIFACTS_UPLOAD_1_COMPRESS
+  rm -rf /tmp/data-{1,2}
+  rm -f /tmp/data-{1,2}.tar.gz
 }
 
 @test "Post-command uploads multiple artifacts with some relocation" {
