@@ -57,7 +57,7 @@ steps:
     - artifacts#v1.3.0:
         upload: 
           from: /output/**
-          to: output.gz
+          to: output.tar.gz
           compress: true
 ```
 
@@ -115,7 +115,7 @@ steps:
     plugins:
     - artifacts#v1.3.0:
         download: 
-          from: output.gz
+          from: output.tar.gz
           to: /workdir/output
           extract: true
 ```
